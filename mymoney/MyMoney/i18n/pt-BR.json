@@ -16,6 +16,7 @@
   "error.target-not-found": "Nenhum jogador online chamado '{{name}}'. Rode player_list para ver os nomes exatos.",
   "error.target-ambiguous": "Mais de um jogador online casa com '{{name}}'. Digite o nome completo.",
   "error.target-is-self": "Você não pode enviar dinheiro para si mesmo.",
+  "error.refunded": "{{target}} não recebeu os {{amount}}g: o dinheiro voltou para a sua carteira.",
 
   "command.pay.description": "Envia dinheiro da sua carteira para outro jogador.\n\nUso: player_pay <nome do jogador> <valor>\n\nO último argumento é o valor, então nomes com espaço funcionam: player_pay Maria Clara 5000\nRode player_list para ver os nomes exatos. Só funciona em saves com carteiras separadas.",
   "command.list.description": "Lista os jogadores online e o nome exato de cada um, para usar no player_pay.",

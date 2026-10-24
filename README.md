@@ -61,7 +61,7 @@ de negócio não escreve mensagem para o jogador.
 | `ModEntry.cs` | Monta as peças e liga os eventos. Nada de regra. |
 | `Core/` | Tipos de domínio: resultado da transferência, validação de argumentos, textos (`Translations`, `MessageFormatter`). |
 | `Services/` | `WalletService` é o **único** lugar que movimenta dinheiro; `PlayerLookup` é o único que resolve nomes. |
-| `Network/` | O farmhand pede, o host credita (`CreditRequest`). Evita escrever na carteira alheia de outra máquina. |
+| `Network/` | O farmhand pede, o host credita (`CreditRequest`) e responde: aviso a quem recebeu (`CreditReceipt`) ou estorno a quem pagou (`CreditRefund`). Evita escrever na carteira alheia de outra máquina. |
 | `Commands/` | Comandos de console, um por arquivo, registrados pelo `CommandRegistry`. |
 | `UI/` | Clique na caixa de dinheiro, lista de jogadores e seletor de valor nativo do jogo. |
 | `i18n/` | Textos em inglês (`default.json`) e português (`pt-BR.json`). |
@@ -70,6 +70,14 @@ Para adicionar um comando novo, crie a classe em `Commands/` implementando
 `IConsoleCommand` e inclua na lista do `ModEntry` — o `Entry` não cresce.
 
 ## Histórico
+
+**Não lançado**
+
+- Quem recebe dinheiro é avisado na tela. Antes o crédito chegava em silêncio:
+  o número subia sozinho e não se sabia de quem veio.
+- Dinheiro não some mais quando o host recusa o crédito. Quem paga de um
+  farmhand debita antes de pedir; se o destino desconectar nesse intervalo, o
+  valor volta para a carteira com um aviso, em vez de deixar de existir.
 
 **2.0.0**
 

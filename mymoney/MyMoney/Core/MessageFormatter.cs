@@ -14,6 +14,8 @@ namespace MyMoney.Core
             return result.Status switch
             {
                 TransferStatus.Success => Translations.Sent(result.Amount, result.TargetName),
+                TransferStatus.Received => Translations.Received(result.Amount, result.TargetName),
+                TransferStatus.Refunded => Translations.Refunded(result.Amount, result.TargetName),
                 TransferStatus.WorldNotReady => Translations.WorldNotReady,
                 TransferStatus.SharedWallet => Translations.SharedWallet,
                 TransferStatus.MissingArguments => Translations.MissingArguments,

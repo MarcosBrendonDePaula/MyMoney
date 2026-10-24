@@ -69,8 +69,26 @@ namespace MyMoney.Services
             // mantém o mod funcionando quando o jogo muda a sincronização.
             this.transport.Credit(target, amount);
 
+            // O sucesso devolvido aqui é otimista no caminho do farmhand: o
+            // host ainda não respondeu. A alternativa — um estado "pendente" e
+            // a mensagem só depois da resposta — foi recusada porque quem
+            // mostra o resultado (console ou HUD) é escolhido pelo chamador
+            // SÍNCRONO, e a resposta chega num evento que não sabe de onde o
+            // pedido saiu. Quando o host recusa, o CreditRefund estorna e
+            // corrige a mensagem; o que não pode acontecer é o silêncio.
+
             this.monitor.Log($"Transferidos {amount}g de {Game1.player.Name} para {target.Name}.", LogLevel.Info);
             return TransferResult.Success(target.displayName, amount);
+        }
+
+        /// <inheritdoc/>
+        public void Refund(int amount)
+        {
+            if (amount <= 0 || Game1.player == null)
+                return;
+
+            Game1.player.Money += amount;
+            this.monitor.Log($"Estornados {amount}g: o crédito não foi aplicado.", LogLevel.Info);
         }
     }
 }

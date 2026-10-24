@@ -1,3 +1,4 @@
+using MyMoney.Core;
 using StardewModdingAPI;
 
 namespace MyMoney.Network
@@ -9,20 +10,26 @@ namespace MyMoney.Network
     /// </summary>
     internal sealed class TransferTransportFactory : ITransferTransport
     {
-        private readonly HostTransport host;
         private readonly PeerTransport peer;
 
-        public TransferTransportFactory(IModHelper helper, IMonitor monitor, string modId)
+        public TransferTransportFactory(IModHelper helper, IMonitor monitor, string modId, ITransferReporter reporter)
         {
-            this.host = new HostTransport(monitor);
+            this.Host = new HostTransport(monitor, helper, modId, reporter);
             this.peer = new PeerTransport(helper, modId);
         }
+
+        /// <summary>
+        /// O transporte do host, exposto porque o atendimento de um
+        /// <see cref="CreditRequest"/> credita sem passar pela escolha abaixo:
+        /// quem atende já é, por definição, o host.
+        /// </summary>
+        public HostTransport Host { get; }
 
         /// <inheritdoc/>
         public void Credit(StardewValley.Farmer target, int amount)
         {
             ITransferTransport transport = Context.IsMainPlayer
-                ? this.host
+                ? this.Host
                 : this.peer;
 
             transport.Credit(target, amount);

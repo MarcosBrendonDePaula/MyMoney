@@ -12,6 +12,10 @@ namespace MyMoney.Network
     /// peer — foi o tipo de detalhe que fez o mod "parar de funcionar" numa
     /// atualização do jogo. Pedir ao host, que é a autoridade do save, é
     /// estável entre versões.
+    ///
+    /// O host responde apenas quando RECUSA, com um <see cref="CreditRefund"/>:
+    /// a resposta de sucesso não existe porque o aviso de quem recebeu já é a
+    /// confirmação, e quem pagou viu o próprio saldo cair.
     /// </remarks>
     internal sealed class PeerTransport : ITransferTransport
     {
@@ -33,6 +37,7 @@ namespace MyMoney.Network
             var request = new CreditRequest
             {
                 TargetPlayerId = target.UniqueMultiplayerID,
+                SenderPlayerId = Game1.player.UniqueMultiplayerID,
                 Amount = amount,
                 SenderName = Game1.player.Name
             };

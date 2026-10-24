@@ -45,6 +45,7 @@ namespace MyMoney
         public static string TargetNotFound(string name) => Get("error.target-not-found", new { name });
         public static string TargetAmbiguous(string name) => Get("error.target-ambiguous", new { name });
         public static string TargetIsSelf => Get("error.target-is-self");
+        public static string Refunded(int amount, string target) => Get("error.refunded", new { amount, target });
 
         public static string CommandPayDescription => Get("command.pay.description");
         public static string CommandListDescription => Get("command.list.description");

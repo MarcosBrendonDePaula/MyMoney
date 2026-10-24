@@ -5,8 +5,6 @@ using MyMoney.Network;
 using MyMoney.Services;
 using MyMoney.UI;
 using StardewModdingAPI;
-using StardewModdingAPI.Events;
-using StardewValley;
 
 namespace MyMoney
 {
@@ -25,15 +23,17 @@ namespace MyMoney
         {
             Translations.Init(helper.Translation);
 
+            ITransferReporter console = new ConsoleReporter(this.Monitor);
+            ITransferReporter hud = new HudReporter();
+
             // Transporte: decide na hora se o crédito é escrito direto (host)
-            // ou pedido ao host por mensagem (farmhand).
-            ITransferTransport transport = new TransferTransportFactory(helper, this.Monitor, this.ModManifest.UniqueID);
+            // ou pedido ao host por mensagem (farmhand). O HUD é o repórter
+            // dele porque o que ele conta — dinheiro que chegou, estorno —
+            // acontece sem ninguém ter digitado nada no console.
+            var transport = new TransferTransportFactory(helper, this.Monitor, this.ModManifest.UniqueID, hud);
 
             this.lookup = new PlayerLookup();
             this.wallet = new WalletService(this.Monitor, transport);
-
-            ITransferReporter console = new ConsoleReporter(this.Monitor);
-            ITransferReporter hud = new HudReporter();
 
             new CommandRegistry(helper.ConsoleCommands, this.Monitor).RegisterAll(new List<IConsoleCommand>
             {
@@ -44,43 +44,9 @@ namespace MyMoney
             // UI: clicar na caixa de dinheiro abre a tela de envio.
             new MoneyBoxClickHandler(helper, this.wallet, this.lookup, hud).Register();
 
-            helper.Events.Multiplayer.ModMessageReceived += this.OnModMessageReceived;
-        }
-
-        /// <summary>
-        /// Atende pedidos de crédito vindos de farmhands.
-        /// </summary>
-        /// <remarks>
-        /// Só o host aplica. O jogador que pagou já debitou a própria carteira
-        /// antes de enviar a mensagem, então aqui é apenas o crédito.
-        /// </remarks>
-        private void OnModMessageReceived(object? sender, ModMessageReceivedEventArgs e)
-        {
-            if (e.FromModID != this.ModManifest.UniqueID || e.Type != CreditRequest.MessageType)
-                return;
-
-            if (!Context.IsMainPlayer)
-                return;
-
-            CreditRequest request = e.ReadAs<CreditRequest>();
-
-            if (request.Amount <= 0)
-            {
-                this.Monitor.Log($"Pedido de crédito ignorado: valor inválido ({request.Amount}).", LogLevel.Warn);
-                return;
-            }
-
-            // onlineOnly: nao creditamos quem desconectou; o pedido se perde e
-            // quem pagou e avisado pelo log do host.
-            Farmer? target = Game1.GetPlayer(request.TargetPlayerId, onlyOnline: true);
-            if (target == null)
-            {
-                this.Monitor.Log($"Pedido de crédito ignorado: jogador {request.TargetPlayerId} não encontrado.", LogLevel.Warn);
-                return;
-            }
-
-            HostTransport.Credit(this.Monitor, target, request.Amount);
-            this.Monitor.Log($"{request.SenderName} enviou {request.Amount}g para {target.Name}.", LogLevel.Info);
+            // Mensagens entre as máquinas: pedido de crédito, aviso de
+            // recebimento e estorno.
+            new CreditMailbox(helper, this.Monitor, this.ModManifest.UniqueID, transport.Host, this.wallet, hud).Register();
         }
     }
 }

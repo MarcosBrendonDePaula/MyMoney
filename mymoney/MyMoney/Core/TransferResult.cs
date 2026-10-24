@@ -7,6 +7,12 @@ namespace MyMoney.Core
     {
         Success,
 
+        /// <summary>Dinheiro recebido de outro jogador: não é o resultado de uma tentativa nossa, é o aviso de que chegou.</summary>
+        Received,
+
+        /// <summary>O host não aplicou o crédito e o valor voltou para a carteira de quem pagou.</summary>
+        Refunded,
+
         /// <summary>O mundo não está carregado (jogador ainda na tela de título).</summary>
         WorldNotReady,
 
@@ -50,10 +56,19 @@ namespace MyMoney.Core
         /// <summary>Valor envolvido, quando faz sentido para a mensagem.</summary>
         public int Amount { get; }
 
-        /// <summary>Nome do destino ou texto digitado pelo jogador, para a mensagem.</summary>
+        /// <summary>
+        /// Nome do outro lado da transferência, para a mensagem: o destino, o
+        /// texto que o jogador digitou, ou — em <see cref="TransferStatus.Received"/>
+        /// — o nome de quem pagou.
+        /// </summary>
         public string TargetName { get; }
 
-        public bool IsSuccess => this.Status == TransferStatus.Success;
+        /// <summary>
+        /// Se a mensagem é boa notícia. <see cref="TransferStatus.Received"/>
+        /// entra aqui para o HUD tocar a moeda em vez do som de erro, embora
+        /// não seja o resultado de nada que este jogador tenha tentado.
+        /// </summary>
+        public bool IsSuccess => this.Status is TransferStatus.Success or TransferStatus.Received;
 
         private TransferResult(TransferStatus status, int amount, string targetName)
         {
@@ -65,10 +80,17 @@ namespace MyMoney.Core
         public static TransferResult Success(string targetName, int amount)
             => new(TransferStatus.Success, amount, targetName);
 
+        /// <summary>Dinheiro que chegou de <paramref name="senderName"/>.</summary>
+        public static TransferResult Received(string senderName, int amount)
+            => new(TransferStatus.Received, amount, senderName);
+
         public static TransferResult Fail(TransferStatus status, string targetName = "", int amount = 0)
         {
             if (status == TransferStatus.Success)
                 throw new ArgumentException("Use Success() para resultados bem-sucedidos.", nameof(status));
+
+            if (status == TransferStatus.Received)
+                throw new ArgumentException("Use Received() para dinheiro recebido.", nameof(status));
 
             return new TransferResult(status, amount, targetName);
         }

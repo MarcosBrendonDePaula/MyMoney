@@ -16,6 +16,7 @@
   "error.target-not-found": "No online player named '{{name}}'. Run player_list to see the exact names.",
   "error.target-ambiguous": "More than one online player matches '{{name}}'. Type the full name.",
   "error.target-is-self": "You can't send money to yourself.",
+  "error.refunded": "{{target}} did not get the {{amount}}g: the money is back in your wallet.",
 
   "command.pay.description": "Send money from your wallet to another player.\n\nUsage: player_pay <player name> <amount>\n\nThe last argument is the amount, so names with spaces work: player_pay Maria Clara 5000\nRun player_list to see the exact names. Only works on saves with separate wallets.",
   "command.list.description": "List the online players and their exact names, to use with player_pay.",

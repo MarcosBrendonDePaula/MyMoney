@@ -17,5 +17,11 @@ namespace MyMoney.Services
 
         /// <summary>Valida uma transferência sem executá-la (para habilitar/desabilitar botões na UI).</summary>
         TransferResult Validate(Farmer target, int amount);
+
+        /// <summary>
+        /// Devolve à carteira local um valor debitado por uma transferência que
+        /// o host não aplicou.
+        /// </summary>
+        void Refund(int amount);
     }
 }
