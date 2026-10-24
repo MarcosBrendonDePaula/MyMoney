@@ -1,0 +1,23 @@
+{
+  "menu.title": "Enviar dinheiro",
+  "menu.balance": "Seu saldo: {{amount}}g",
+  "menu.no-players": "Nenhum outro jogador está online agora.",
+  "menu.how-much": "Quanto você quer enviar para {{target}}?",
+
+  "result.sent": "Enviado {{amount}}g para {{target}}.",
+  "result.received": "{{sender}} te enviou {{amount}}g.",
+
+  "error.world-not-ready": "Carregue um save primeiro.",
+  "error.shared-wallet": "Este save usa carteira compartilhada, então não há o que transferir: todos os jogadores já gastam do mesmo dinheiro.",
+  "error.missing-arguments": "Uso: player_pay <nome do jogador> <valor>. Rode player_list para ver os nomes exatos.",
+  "error.invalid-amount": "'{{value}}' não é um valor válido. O último argumento tem que ser um número, por exemplo: player_pay Maria Clara 5000.",
+  "error.amount-not-positive": "O valor tem que ser maior que zero.",
+  "error.not-enough-money": "Você não tem dinheiro suficiente para isso.",
+  "error.target-not-found": "Nenhum jogador online chamado '{{name}}'. Rode player_list para ver os nomes exatos.",
+  "error.target-ambiguous": "Mais de um jogador online casa com '{{name}}'. Digite o nome completo.",
+  "error.target-is-self": "Você não pode enviar dinheiro para si mesmo.",
+
+  "command.pay.description": "Envia dinheiro da sua carteira para outro jogador.\n\nUso: player_pay <nome do jogador> <valor>\n\nO último argumento é o valor, então nomes com espaço funcionam: player_pay Maria Clara 5000\nRode player_list para ver os nomes exatos. Só funciona em saves com carteiras separadas.",
+  "command.list.description": "Lista os jogadores online e o nome exato de cada um, para usar no player_pay.",
+  "command.list.header": "Jogadores online:"
+}

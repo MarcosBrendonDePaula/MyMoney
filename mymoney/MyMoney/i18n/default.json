@@ -1,0 +1,23 @@
+{
+  "menu.title": "Send money",
+  "menu.balance": "Your balance: {{amount}}g",
+  "menu.no-players": "No other players are online right now.",
+  "menu.how-much": "How much do you want to send to {{target}}?",
+
+  "result.sent": "Sent {{amount}}g to {{target}}.",
+  "result.received": "{{sender}} sent you {{amount}}g.",
+
+  "error.world-not-ready": "Load a save first.",
+  "error.shared-wallet": "This save uses a shared wallet, so there is nothing to transfer: every player already spends from the same money.",
+  "error.missing-arguments": "Usage: player_pay <player name> <amount>. Run player_list to see the exact names.",
+  "error.invalid-amount": "'{{value}}' is not a valid amount. The last argument must be a number, e.g. player_pay Maria Clara 5000.",
+  "error.amount-not-positive": "The amount must be greater than zero.",
+  "error.not-enough-money": "You don't have enough money for that.",
+  "error.target-not-found": "No online player named '{{name}}'. Run player_list to see the exact names.",
+  "error.target-ambiguous": "More than one online player matches '{{name}}'. Type the full name.",
+  "error.target-is-self": "You can't send money to yourself.",
+
+  "command.pay.description": "Send money from your wallet to another player.\n\nUsage: player_pay <player name> <amount>\n\nThe last argument is the amount, so names with spaces work: player_pay Maria Clara 5000\nRun player_list to see the exact names. Only works on saves with separate wallets.",
+  "command.list.description": "List the online players and their exact names, to use with player_pay.",
+  "command.list.header": "Online players:"
+}
